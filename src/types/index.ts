@@ -9,7 +9,7 @@ export interface Todo {
 }
 
 export interface VoiceCommand {
-  action: 'add' | 'complete' | 'delete' | 'edit' | 'clear' | 'unknown';
+  action: 'add' | 'complete' | 'delete' | 'edit' | 'clear' | 'unknown' | 'filter' | 'setting' | 'help' | 'summary' | 'bulk_add';
   text?: string;
   priority?: Todo['priority'];
   category?: string;

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ListTodo, Filter, CheckCircle, Circle } from 'lucide-react';
+import { ListTodo, Filter, CheckCircle, Circle, RefreshCw } from 'lucide-react';
 import { Todo } from '../types';
 import { TodoItem } from './TodoItem';
+import { usePullToRefresh } from '../hooks/usePullToRefresh';
+import { MobileUtils } from '../utils/haptic';
 
 interface TodoListProps {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onRefresh?: () => Promise<void>;
 }
 
 type FilterType = 'all' | 'active' | 'completed';
@@ -15,9 +18,28 @@ type FilterType = 'all' | 'active' | 'completed';
 export const TodoList: React.FC<TodoListProps> = ({
   todos,
   onToggle,
-  onDelete
+  onDelete,
+  onRefresh
 }) => {
   const [filter, setFilter] = useState<FilterType>('all');
+  
+  const defaultRefresh = async () => {
+    // Simulate refresh delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  };
+  
+  const {
+    isPulling,
+    pullDistance,
+    isRefreshing,
+    canRefresh,
+    progressPercentage,
+    bindPullToRefresh
+  } = usePullToRefresh({
+    onRefresh: onRefresh || defaultRefresh,
+    threshold: 80,
+    disabled: !MobileUtils.isMobile() || todos.length === 0
+  });
   
   const filteredTodos = todos.filter(todo => {
     switch (filter) {
@@ -92,7 +114,42 @@ export const TodoList: React.FC<TodoListProps> = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" {...bindPullToRefresh}>
+      {/* Pull to refresh indicator */}
+      {MobileUtils.isMobile() && todos.length > 0 && (isPulling || isRefreshing) && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-center py-4"
+        >
+          <div className="flex items-center space-x-2">
+            <motion.div
+              animate={{ 
+                rotate: isRefreshing ? 360 : 0,
+                scale: canRefresh ? 1.2 : 1
+              }}
+              transition={{ 
+                rotate: { duration: 1, repeat: isRefreshing ? Infinity : 0, ease: "linear" },
+                scale: { duration: 0.2 }
+              }}
+            >
+              <RefreshCw className={`w-5 h-5 ${canRefresh ? 'text-green-400' : 'text-white/60'}`} />
+            </motion.div>
+            <span className={`text-sm font-medium ${canRefresh ? 'text-green-400' : 'text-white/60'}`}>
+              {isRefreshing ? 'Refreshing...' : canRefresh ? 'Release to refresh' : 'Pull to refresh'}
+            </span>
+          </div>
+          {/* Progress bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-white/10 overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-blue-400 to-green-400"
+              animate={{ width: `${progressPercentage}%` }}
+              transition={{ duration: 0.1 }}
+            />
+          </div>
+        </motion.div>
+      )}
+      
       {/* Stats */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

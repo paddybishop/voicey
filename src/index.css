@@ -124,9 +124,209 @@ button {
   box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
 }
 
+/* Custom slider styles */
+.slider {
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* Voice waveform styles */
+.voice-waveform {
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+}
+
+.voice-waveform.listening {
+  filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.6));
+}
+
+/* Accessibility styles */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .glass {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+  }
+}
+
 /* Responsive design helpers */
 @media (max-height: 600px) {
   .todo-list {
     max-height: 200px;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .voice-button-container {
+    bottom: 2rem;
+  }
+  
+  .command-discovery {
+    bottom: 10rem;
+  }
+  
+  /* Enhanced touch targets */
+  .todo-item {
+    min-height: 64px;
+    padding: 16px;
+  }
+  
+  .swipe-action {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Pull to refresh styles */
+  .pull-to-refresh-indicator {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+}
+
+/* Touch gesture feedback */
+.swipe-left {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.swipe-right {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Mobile voice button enhancements */
+@media (hover: none) and (pointer: coarse) {
+  .voice-button {
+    transform: scale(1.1);
+    touch-action: manipulation;
+  }
+  
+  .voice-button:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Mobile accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .swipe-animation,
+  .voice-animation,
+  .pull-refresh-animation {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High contrast mode improvements */
+@media (prefers-contrast: high) {
+  .mobile-indicator {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    color: white;
+  }
+  
+  .swipe-action {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid currentColor;
+  }
+}
+
+/* Large text support */
+.large-text {
+  font-size: 1.2em;
+  line-height: 1.6;
+}
+
+.large-text .todo-item {
+  min-height: 80px;
+  padding: 20px;
+}
+
+.large-text .voice-button {
+  transform: scale(1.2);
+}
+
+/* Dark mode optimizations for mobile */
+@media (prefers-color-scheme: dark) {
+  .mobile-settings-panel {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .haptic-feedback-indicator {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  .mobile-voice-settings {
+    max-height: 80vh;
+  }
+  
+  .todo-list {
+    max-height: 40vh;
+  }
+  
+  .voice-button-container {
+    bottom: 1rem;
   }
 }

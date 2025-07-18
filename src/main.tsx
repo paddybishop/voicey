@@ -2,6 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { MobileUtils } from './utils/haptic';
+
+// Initialize mobile optimizations
+if (MobileUtils.isMobile()) {
+  MobileUtils.preventZoom();
+  console.log('Mobile optimizations initialized');
+}
 
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {

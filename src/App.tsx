@@ -3,15 +3,36 @@ import { motion } from 'framer-motion';
 import { VoiceButton } from './components/VoiceButton';
 import { TodoList } from './components/TodoList';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { VoiceCommandDiscovery } from './components/VoiceCommandDiscovery';
+import { AccessibilityIndicators } from './components/AccessibilityIndicators';
+import { VoiceSettingsPanel, VoiceSettings } from './components/VoiceSettingsPanel';
+import { MobileAccessibility } from './components/MobileAccessibility';
+import { MobileVoiceSettings } from './components/MobileVoiceSettings';
 import { useSpeechRecognition } from './hooks/useSpeechRecognition';
 import { useTodos } from './hooks/useTodos';
 import { parseVoiceCommand, speak, getTaskSummary } from './utils/speech';
-import { Sparkles, Volume2, VolumeX, HelpCircle } from 'lucide-react';
+import { Sparkles, Volume2, VolumeX, HelpCircle, Settings } from 'lucide-react';
+import { MobileUtils, VoiceHaptics } from './utils/haptic';
 
 const App: React.FC = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [lastInteraction, setLastInteraction] = useState<Date>(new Date());
+  const [showCommandDiscovery, setShowCommandDiscovery] = useState(false);
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  const [showMobileSettings, setShowMobileSettings] = useState(false);
+  const [visualMode, setVisualMode] = useState(false);
+  const [voiceSettings, setVoiceSettings] = useState<VoiceSettings>({
+    language: 'en-US',
+    sensitivity: 0.5,
+    voiceRate: 1.0,
+    voicePitch: 1.0,
+    voiceVolume: 0.8,
+    autoStart: false,
+    continuousMode: false,
+    noiseSuppression: true,
+    echoCancellation: true
+  });
   
   const {
     isListening,
@@ -47,11 +68,23 @@ const App: React.FC = () => {
     const hasVisited = localStorage.getItem('voice-todo-visited');
     if (!hasVisited && soundEnabled) {
       setTimeout(() => {
-        speak('Welcome to Voice Todo! Your fastest, most beautiful voice-activated todo list. Tap the microphone and say add followed by your task.');
+        speak('Welcome to Voice Todo! Your fastest, most beautiful voice-activated todo list. Tap the microphone and say add followed by your task.', voiceSettings.voiceRate);
         localStorage.setItem('voice-todo-visited', 'true');
+        setShowCommandDiscovery(true);
       }, 1000);
     }
-  }, [soundEnabled]);
+  }, [soundEnabled, voiceSettings.voiceRate]);
+
+  // Show command discovery for new users
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (todos.length === 0 && !isListening) {
+        setShowCommandDiscovery(true);
+      }
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [todos.length, isListening]);
 
   // Periodic encouragement
   useEffect(() => {
@@ -79,8 +112,41 @@ const App: React.FC = () => {
 
   const handleSummary = () => {
     const summary = getTaskSummary(todos);
-    speak(summary);
+    speak(summary, voiceSettings.voiceRate);
     setLastInteraction(new Date());
+  };
+
+  const handleCommandSuggestion = (command: string) => {
+    const parsedCommand = parseVoiceCommand(command);
+    executeVoiceCommand(parsedCommand);
+    setShowCommandDiscovery(false);
+    setLastInteraction(new Date());
+  };
+
+  const handleVoiceSettingsChange = (newSettings: VoiceSettings) => {
+    setVoiceSettings(newSettings);
+  };
+
+  const handleMobileSettingsChange = (newSettings: any) => {
+    // Handle mobile-specific settings
+    console.log('Mobile settings changed:', newSettings);
+  };
+
+  const handleAnnouncement = (message: string) => {
+    if (soundEnabled) {
+      speak(message, voiceSettings.voiceRate);
+    }
+  };
+
+  const handleRefresh = async () => {
+    // Simulate refresh action
+    VoiceHaptics.commandProcessed();
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    speak('Todo list refreshed', voiceSettings.voiceRate);
+  };
+
+  const handleToggleVisualMode = () => {
+    setVisualMode(!visualMode);
   };
 
   const commands = [
@@ -140,6 +206,13 @@ const App: React.FC = () => {
               >
                 <HelpCircle className="w-5 h-5 text-white" />
               </button>
+
+              <button
+                onClick={() => MobileUtils.isMobile() ? setShowMobileSettings(true) : setShowVoiceSettings(true)}
+                className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+              >
+                <Settings className="w-5 h-5 text-white" />
+              </button>
             </div>
           </header>
 
@@ -179,6 +252,7 @@ const App: React.FC = () => {
                 todos={todos}
                 onToggle={toggleTodo}
                 onDelete={deleteTodo}
+                onRefresh={handleRefresh}
               />
             </div>
           </main>
@@ -194,6 +268,48 @@ const App: React.FC = () => {
               transcript={transcript}
             />
           </div>
+
+          {/* Voice Command Discovery */}
+          <VoiceCommandDiscovery
+            onCommandSuggestion={handleCommandSuggestion}
+            isVisible={showCommandDiscovery}
+            todoCount={todos.length}
+            hasCompletedTasks={todos.some(t => t.completed)}
+          />
+
+          {/* Accessibility Indicators */}
+          <AccessibilityIndicators
+            isListening={isListening}
+            isProcessing={isProcessing}
+            transcript={transcript}
+            error={error}
+            soundEnabled={soundEnabled}
+            onToggleSound={handleSoundToggle}
+            onToggleVisualMode={handleToggleVisualMode}
+          />
+
+          {/* Voice Settings Panel */}
+          <VoiceSettingsPanel
+            isOpen={showVoiceSettings}
+            onClose={() => setShowVoiceSettings(false)}
+            onSettingsChange={handleVoiceSettingsChange}
+          />
+
+          {/* Mobile Voice Settings Panel */}
+          <MobileVoiceSettings
+            isOpen={showMobileSettings}
+            onClose={() => setShowMobileSettings(false)}
+            onSettingsChange={handleMobileSettingsChange}
+          />
+
+          {/* Mobile Accessibility */}
+          <MobileAccessibility
+            isListening={isListening}
+            isProcessing={isProcessing}
+            transcript={transcript}
+            error={error}
+            onAnnounce={handleAnnouncement}
+          />
         </div>
       </div>
     </ErrorBoundary>

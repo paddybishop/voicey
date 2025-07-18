@@ -2,16 +2,42 @@
 
 🎙️ **The world's first, fastest, most beautiful voice-activated mobile-optimized todo list**
 
-## Features
+## 🚀 Live Demo
 
-- **Voice Recognition**: Advanced speech recognition with natural language processing
-- **Voice Synthesis**: Audio feedback for all actions
-- **Beautiful UI**: Modern, responsive design with smooth animations
-- **Mobile Optimized**: Perfect for mobile devices with touch-friendly interactions
-- **Smart Commands**: Natural language processing for intuitive voice commands
-- **Priority System**: High, medium, and low priority tasks
-- **Real-time Sync**: Instant updates with local storage persistence
-- **PWA Ready**: Works offline and can be installed as a native app
+**[Try it now: https://paddybishop.github.io/voicey/](https://paddybishop.github.io/voicey/)**
+
+## ✨ Enhanced Features
+
+### 🎤 Voice Features
+- **Advanced Voice Recognition**: Enhanced speech recognition with natural language processing
+- **Real-time Voice Waveform**: Visual feedback during voice recording
+- **Voice Activity Detection**: Smart detection of speech with confidence indicators
+- **Voice Command Discovery**: Context-aware command suggestions
+- **Multi-language Support**: 14 languages supported for voice recognition
+- **Voice Synthesis**: Audio feedback for all actions with customizable settings
+
+### 🎨 Visual & UX Enhancements
+- **Beautiful Animations**: Framer Motion animations with breathing effects
+- **Voice Waveform Visualization**: Real-time audio analysis and visualization
+- **Smart Command Suggestions**: Interactive command carousel with smooth transitions
+- **Enhanced Visual Feedback**: Multiple animation states for voice interactions
+- **Accessibility Features**: Visual indicators for hearing-impaired users
+
+### 📱 Mobile Optimizations
+- **Touch Gesture Controls**: Swipe to complete/delete todos
+- **Advanced Haptic Feedback**: 7 vibration patterns for different interactions
+- **Screen Wake Prevention**: Keeps screen on during voice recording
+- **Pull-to-Refresh**: Gesture-based list updates
+- **Mobile-Specific Commands**: Optimized voice commands for mobile use
+- **Touch-Friendly Design**: 44px minimum touch targets
+
+### ♿ Accessibility Features
+- **Visual Mode**: Complete visual interface for hearing-impaired users
+- **Live Transcription**: Real-time display of voice recognition results
+- **Screen Reader Support**: ARIA live regions and screen reader integration
+- **High Contrast Mode**: Enhanced visibility options
+- **Reduced Motion**: Respects user motion preferences
+- **Large Text Support**: Scalable text for better readability
 
 ## Voice Commands
 

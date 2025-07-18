@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, X, AlertCircle, CheckCircle, Trash2 } from 'lucide-react';
 import { Todo } from '../types';
@@ -19,8 +19,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   onToggle,
   onDelete
 }) => {
-  const [swipeOffset, setSwipeOffset] = useState(0);
-  const [showActions, setShowActions] = useState(false);
+  // const [swipeOffset, setSwipeOffset] = useState(0);
+  // const [showActions, setShowActions] = useState(false);
 
   const handleSwipeRight = () => {
     if (!todo.completed) {

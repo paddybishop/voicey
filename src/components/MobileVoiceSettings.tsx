@@ -12,7 +12,7 @@ import {
   Speaker,
   Shield,
   Accessibility,
-  TouchIcon,
+  TouchpadIcon,
   Headphones
 } from 'lucide-react';
 import { HapticFeedback, MobileUtils } from '../utils/haptic';
@@ -228,7 +228,7 @@ export const MobileVoiceSettings: React.FC<MobileVoiceSettingsProps> = ({
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <TouchIcon className="w-5 h-5 text-green-400" />
+                  <TouchpadIcon className="w-5 h-5 text-green-400" />
                   <div>
                     <div className="text-white font-medium">Touch Gestures</div>
                     <div className="text-white/60 text-sm">Swipe to complete or delete tasks</div>

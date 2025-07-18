@@ -24,7 +24,7 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
 }) => {
   const voiceActivity = useVoiceActivity(isListening);
   const [isPressed, setIsPressed] = useState(false);
-  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+  const [longPressTimer, setLongPressTimer] = useState<number | null>(null);
   
   // Handle screen wake lock
   useEffect(() => {
